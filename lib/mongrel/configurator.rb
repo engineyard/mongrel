@@ -202,6 +202,7 @@ module Mongrel
         # change back to the original starting directory
         Dir.chdir(ops[:cwd])
 
+        write_pid_file
       else
         log "WARNING: Win32 does not support daemon mode."
       end

@@ -85,9 +85,10 @@ module Mongrel
 
       config = Mongrel::Rails::RailsConfigurator.new(settings) do
         if defaults[:daemon]
-          if File.exist? defaults[:pid_file]
-            log "!!! PID file #{defaults[:pid_file]} already exists.  Mongrel could be running already.  Check your #{defaults[:log_file]} for errors."
-            log "!!! Exiting with error.  You must stop mongrel and clear the .pid before I'll attempt a start."
+          if already_running?
+            log(:error, "!!! PID file #{defaults[:pid_file]} points to an existing process.")
+            log(:error, "!!! Mongrel is probably running already.  Check your #{defaults[:log_file]} for errors.")
+            log(:error, "!!! Exiting with error.")
             exit 1
           end
 
