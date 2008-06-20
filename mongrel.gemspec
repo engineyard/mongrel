@@ -4,13 +4,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{mongrel}
-  s.version = "1.1.5"
+  s.version = "1.1.5.1"
 
   s.specification_version = 2 if s.respond_to? :specification_version=
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Zed A. Shaw"]
-  s.date = %q{2008-05-22}
+  s.date = %q{2008-06-20}
   s.default_executable = %q{mongrel_rails}
   s.description = %q{A small fast HTTP library and server that runs Rails, Camping, Nitro and Iowa apps.}
   s.email = %q{}
@@ -18,13 +18,13 @@ Gem::Specification.new do |s|
   s.extensions = ["ext/http11/extconf.rb"]
   s.extra_rdoc_files = ["CHANGELOG", "COPYING", "lib/mongrel/camping.rb", "lib/mongrel/cgi.rb", "lib/mongrel/command.rb", "lib/mongrel/configurator.rb", "lib/mongrel/const.rb", "lib/mongrel/debug.rb", "lib/mongrel/gems.rb", "lib/mongrel/handlers.rb", "lib/mongrel/header_out.rb", "lib/mongrel/http_request.rb", "lib/mongrel/http_response.rb", "lib/mongrel/init.rb", "lib/mongrel/rails.rb", "lib/mongrel/stats.rb", "lib/mongrel/tcphack.rb", "lib/mongrel/uri_classifier.rb", "lib/mongrel.rb", "LICENSE", "README"]
   s.has_rdoc = true
-  s.homepage = %q{http://mongrel.rubyforge.org}
+  s.homepage = %q{http://github.com/engineyard/mongrel}
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Mongrel", "--main", "README"]
   s.require_paths = ["lib", "ext"]
   s.required_ruby_version = Gem::Requirement.new(">= 1.8.4")
   s.rubyforge_project = %q{mongrel}
   s.rubygems_version = %q{1.0.1}
-  s.summary = %q{A small fast HTTP library and server that runs Rails, Camping, Nitro and Iowa apps.}
+  s.summary = %q{A small fast HTTP library and server that runs Rails, Camping, Nitro and Iowa apps. Patched to provide the pid dropping patch (changset 1003)}
   s.test_files = ["test/test_cgi_wrapper.rb", "test/test_command.rb", "test/test_conditional.rb", "test/test_configurator.rb", "test/test_debug.rb", "test/test_handlers.rb", "test/test_http11.rb", "test/test_redirect_handler.rb", "test/test_request_progress.rb", "test/test_response.rb", "test/test_stats.rb", "test/test_uriclassifier.rb", "test/test_ws.rb"]
 
   s.add_dependency(%q<gem_plugin>, [">= 0.2.3"])
