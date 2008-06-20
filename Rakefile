@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'hoe'
 
-Hoe.new('mongrel', '1.1.4') do |p|
+Hoe.new('mongrel', '1.1.5.1') do |p|
   p.author = 'Zed A. Shaw'
   p.email = 'tech@engineyard.com'
   p.summary = 'Engine Yard fork of mongrel'
