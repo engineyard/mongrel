@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-#
 # Copyright (c) 2005 Zed A. Shaw
 # You can redistribute it and/or modify it under the same terms as Ruby.
 #
@@ -85,15 +83,13 @@ module Mongrel
 
       config = Mongrel::Rails::RailsConfigurator.new(settings) do
         if defaults[:daemon]
-          if already_running?
-            log(:error, "!!! PID file #{defaults[:pid_file]} points to an existing process.")
-            log(:error, "!!! Mongrel is probably running already.  Check your #{defaults[:log_file]} for errors.")
-            log(:error, "!!! Exiting with error.")
+          if File.exist? defaults[:pid_file]
+            log "!!! PID file #{defaults[:pid_file]} already exists.  Mongrel could be running already.  Check your #{defaults[:log_file]} for errors."
+            log "!!! Exiting with error.  You must stop mongrel and clear the .pid before I'll attempt a start."
             exit 1
           end
 
           daemonize
-          write_pid_file
           log "Daemonized, any open files are closed.  Look at #{defaults[:pid_file]} and #{defaults[:log_file]} for info."
           log "Settings loaded from #{@config_file} (they override command line)." if @config_file
         end
@@ -132,14 +128,16 @@ module Mongrel
       config.run
       config.log "Mongrel #{Mongrel::Const::MONGREL_VERSION} available at #{@address}:#{@port}"
 
-      unless config.defaults[:daemon]
+      if config.defaults[:daemon]
+        config.write_pid_file
+      else
         config.log "Use CTRL-C to stop." 
       end
 
       config.join
 
       if config.needs_restart
-        if RUBY_PLATFORM !~ /djgpp|(cyg|ms|bcc)win|mingw/
+        if RUBY_PLATFORM !~ /mswin/
           cmd = "ruby #{__FILE__} start #{original_args.join(' ')}"
           config.log "Restarting with arguments:  #{cmd}"
           config.stop(false, true)
@@ -196,7 +194,7 @@ module Mongrel
   end
 
   def Mongrel::send_signal(signal, pid_file)
-    pid = File.read(pid_file).to_i 
+    pid = open(pid_file).read.to_i
     print "Sending #{signal} to Mongrel at PID #{pid}..."
     begin
       Process.kill(signal, pid)
@@ -216,7 +214,7 @@ module Mongrel
         ['-c', '--chdir PATH', "Change to dir before starting (will be expanded).", :@cwd, "."],
         ['-f', '--force', "Force the shutdown (kill -9).", :@force, false],
         ['-w', '--wait SECONDS', "Wait SECONDS before forcing shutdown", :@wait, "0"], 
-        ['-P', '--pid FILE', "Where the PID file is located (cannot be changed via soft restart).", :@pid_file, "log/mongrel.pid"]
+        ['-P', '--pid FILE', "Where the PID file is located.", :@pid_file, "log/mongrel.pid"]
       ]
     end
 

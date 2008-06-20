@@ -173,41 +173,12 @@ module Mongrel
         ops = resolve_defaults(options)
         setup_signals(options)
 
-        if RUBY_PLATFORM !~ /djgpp|(cyg|ms|bcc)win|mingw/
+        if RUBY_PLATFORM !~ /mswin/
           # rails reload
           trap("HUP") { log "HUP signal received."; reload!          }
 
           log "Rails signals registered.  HUP => reload (without restart).  It might not work well."
         end
-      end
-
-      # true if there is a pidfile, and the process with PID specified in it is running
-      def already_running?
-        # if pidfile doesn't exist, cannot be read, or contents don't look like a valid pid
-        # return false and try to start anyway
-        begin
-          pid = File.read(defaults[:pid_file]).strip
-          raise "Contents of #{defaults[:pid_file]} are not a valid number" unless pid =~ /\A\d+\Z/     
-        rescue Object => e
-          return false
-        end
-        begin
-          Process.kill(0, pid.to_i)
-          return true
-        rescue Object => e
-          case e
-          when Errno::ESRCH
-            # no process with this PID
-            return false
-          when Errno::EPERM
-            # on a Linux this means that the process exists, but runs under a different user
-            return true
-          else
-            # can be anything, return false and try to start anyway
-            return false
-          end
-        end
-
       end
     end
   end
